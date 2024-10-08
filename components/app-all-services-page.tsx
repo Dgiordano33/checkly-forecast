@@ -1,6 +1,7 @@
 'use client'
 
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
+import { useMemo } from "react"
 
 const allServices = [
   {
@@ -9,6 +10,7 @@ const allServices = [
     status: "Up",
     responseTime: "45ms",
     lastIncident: "None",
+    featured: true,
   },
   {
     name: "AWS",
@@ -16,6 +18,7 @@ const allServices = [
     status: "Up",
     responseTime: "55ms",
     lastIncident: "3 days ago",
+    featured: true,
   },
   {
     name: "MongoDB",
@@ -23,6 +26,7 @@ const allServices = [
     status: "Up",
     responseTime: "30ms",
     lastIncident: "1 week ago",
+    featured: false,
   },
   {
     name: "HubSpot",
@@ -30,6 +34,7 @@ const allServices = [
     status: "Degraded",
     responseTime: "120ms",
     lastIncident: "Ongoing",
+    featured: false,
   },
   {
     name: "Twilio",
@@ -37,6 +42,7 @@ const allServices = [
     status: "Up",
     responseTime: "60ms",
     lastIncident: "2 weeks ago",
+    featured: true,
   },
 ]
 
@@ -74,14 +80,50 @@ function ServiceCard({ service }: { service: typeof allServices[0] }) {
 }
 
 export function Page() {
+  // Filter out featured services
+  const featuredServices = useMemo(() => allServices.filter(service => service.featured), [])
+  
+  // Group services by category
+  const groupedServices = useMemo(() => {
+    return allServices.reduce((acc, service) => {
+      if (!acc[service.category]) acc[service.category] = []
+      acc[service.category].push(service)
+      return acc
+    }, {} as Record<string, typeof allServices>)
+  }, [])
+
   return (
-    <div>
-      <h1 className="text-2xl font-bold mb-6">All Services</h1>
-      <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
-        {allServices.map((service) => (
-          <ServiceCard key={service.name} service={service} />
+    <div className="flex h-screen bg-gray-100">
+      {/* Sidebar */}
+  
+
+      {/* Main content */}
+      <div className="flex-1 p-8 overflow-auto">
+      {/* Most Popular Section */}
+      <div>
+        <h2 className="text-xl font-bold mb-4">Most Popular</h2>
+        <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
+          {featuredServices.map((service) => (
+            <ServiceCard key={service.name} service={service} />
+          ))}
+        </div>
+      </div>
+
+      {/* All Services Section */}
+      <div>
+        <h2 className="text-xl font-bold mb-4">All Services</h2>
+        {Object.entries(groupedServices).map(([category, services]) => (
+          <div key={category} className="mb-8">
+            <h3 className="text-lg font-semibold mb-3">{category}</h3>
+            <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
+              {services.map((service) => (
+                <ServiceCard key={service.name} service={service} />
+              ))}
+            </div>
+          </div>
         ))}
       </div>
+    </div>
     </div>
   )
 }
