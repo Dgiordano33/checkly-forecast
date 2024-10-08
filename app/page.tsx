@@ -1,9 +1,5 @@
-import ServiceStatusDashboard from "@/components/service-status-dashboard"
+import { redirect } from 'next/navigation';
 
 export default function DashboardPage() {
-  return (
-    <div>
-      <ServiceStatusDashboard />
-    </div>
-  )
+  redirect('/your-services');
 }

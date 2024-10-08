@@ -1,7 +1,9 @@
+'use client'
+
 import type { Metadata } from 'next'
 import { Inter } from 'next/font/google'
 import './globals.css'
-import { SidebarComponent } from '@/components/app-components-sidebar'
+import Sidebar from './components/Sidebar'
 
 const inter = Inter({ subsets: ['latin'] })
 
@@ -10,7 +12,7 @@ export const metadata: Metadata = {
   description: 'Monitor your services and their status',
 }
 
-export default function RootLayout({
+export function Layout({
   children,
 }: {
   children: React.ReactNode
@@ -19,7 +21,7 @@ export default function RootLayout({
     <html lang="en">
       <body className={inter.className}>
         <div className="flex h-screen bg-gray-100">
-          <SidebarComponent />
+          <Sidebar />
           <main className="flex-1 p-8 overflow-auto">
             {children}
           </main>
